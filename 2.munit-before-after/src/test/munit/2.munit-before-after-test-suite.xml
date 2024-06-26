@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="2.munit-before-after-test-suite.xml" />
+	<munit:before-suite name="beforeTestSuite" doc:id="3fb8d1a1-dfce-4402-ae87-c641a11d1a1a" >
+		<logger level="INFO" doc:name="Log BEFORE TEST SUITE" doc:id="5d1e3232-3537-4ef4-87fb-2e7ead6ed6b6" message='#["LOG BEFORE TEST SUITE"]'/>
+	</munit:before-suite>
+	<munit:before-test name="beforeTest" doc:id="a8150db0-da5f-49c1-bcba-a6ee60c3c7fc" >
+		<logger level="INFO" doc:name="Log BEFORE TEST" doc:id="85a2429f-818a-4e2d-993d-1cb12301ed50" message='#["LOG BEFORE TEST"]'/>
+	</munit:before-test>
+	<munit:after-test name="afterTest" doc:id="29b0f98e-38e8-45b7-af16-8bdb0973a680" >
+		<logger level="INFO" doc:name="Log AFTER TEST" doc:id="ca33fb77-f6f9-4f85-bc75-737046d08a9b" message='#["LOG AFTER TEST"]'/>
+	</munit:after-test>
+	<munit:test name="validateFeeGreaterThanZeroSuccessTestCase" doc:id="093fa552-f8c0-4b76-87c7-2cb92e3ad53c" description="Test">
+		<munit:behavior >
+			<set-payload value='#[{&#10;	name: "Maria Fernandes",&#10;	hospital: "Lusíadas Porto",&#10;	category: "ortopedia/ traumatologia",&#10;	availability: "9:00 a.m. - 11:00 a.m.",&#10;	fee: "1234"&#10;}]' doc:name="Set Payload" doc:id="56a878e0-2e24-4cf5-b3ce-89a47ea4195c" />
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to getMedicalAppontment" doc:id="f3748688-99d5-433a-ba30-c53ac565f367" name="getMedicalAppontment"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that fee greater than 0" doc:id="3e228bac-ab8e-4972-a87f-484c917a08e0" is="#[MunitTools::greaterThan(0)]" expression="#[payload.fee]"/>
+			<logger level="INFO" doc:name="Log validateFeeGreaterThanZeroSuccessTestCase" doc:id="3935efdf-f86a-41e8-8779-5ab489bdf16b" message="#[payload.fee]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="validatePayloadNotNullSuccessTestCase" doc:id="45f58e13-6b68-4627-a5b5-8064425a19fa" >
+		<munit:behavior>
+			<set-payload value='#[{&#10;	name: "Maria Fernandes",&#10;	hospital: "Lusíadas Porto",&#10;	category: "ortopedia/ traumatologia",&#10;	availability: "9:00 a.m. - 11:00 a.m.",&#10;	fee: "300"&#10;}]' doc:name="Set Payload" doc:id="83ecdc55-7f16-4cc0-8694-4f006917a1e2" />
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to getMedicalAppontment" doc:id="831e0183-681d-41c1-b7c8-3e16a5f32d41" name="getMedicalAppontment"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that - paylod not null" doc:id="3aa8e377-66f2-4fe7-a774-18d1c56dfc18" is="#[MunitTools::notNullValue()]" expression="#[payload]" message='#["Payload is NULL"]'/>
+			<logger level="INFO" doc:name="Log validatePayloadNotNullSuccessTestCase" doc:id="1eea88ca-5184-43e5-8282-e69be2eef227" message="#[payload]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:after-suite name="afterTestSuite" doc:id="e3d395ce-d70c-4579-b659-ea8392722bd9" >
+		<logger level="INFO" doc:name="Log AFTER TEST SUITE" doc:id="88cc35be-832b-403e-aac7-597405b1bacc" message='#["LOG AFTER TEST SUITE"]'/>
+	</munit:after-suite>
+
+
+</mule>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="4.munit-assert-test-suite.xml" />
+	<munit:test name="payloadJSONExpectedSuccessTestCase" doc:id="e013b0ad-2cd4-413d-be4d-692a8350a6c9" description="Test">
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to getJSONObject" doc:id="5a93e7e9-2488-4b5c-a9cd-e4bfe0aafc75" name="getJSONObject"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that - Payload is Expected" doc:id="60f1c738-9333-41d8-a993-6cf2d6919a67" message='#["ERROR! The response payload is incorrect!"]' expression="#[%dw 2.0&#10;&#10;&#10;output application/json&#10;---&#10;payload]" is="#[MunitTools::equalTo(readUrl('classpath://payloadResponse.json', 'application/json'))]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="categoryMatchSuccessTestCase" doc:id="72b83fd7-8dae-49a1-b37b-5b83bae04b3b" >
+		<munit:behavior >
+			<set-variable value="#[['ortopedia/ traumatologia', 'dermatologia', 'oftalmologia'] as Array]" doc:name="Set Variable - medical Categories" doc:id="a31bc1f9-0eea-4e0e-9fcb-5719441934f5" variableName="medicalCategories"/>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to getJSONObject" doc:id="85468fc3-a326-4d2e-94ee-1bc6c3aa88ef" name="getJSONObject"/>
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert doc:name="Assert expression - medical category exists" doc:id="01068a77-14ae-45c6-83c7-e74bb5285c5c" message='#["ERROR! The medical category in the payload does not exist!"]'>
+				<munit-tools:that ><![CDATA[#[import * from dw::test::Asserts 
+ ---
+payload.category must beOneOf(vars.medicalCategories)]]]></munit-tools:that>
+			</munit-tools:assert>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="feeValueSuccessTestCase" doc:id="feadaa8d-5622-4fbe-9d1e-d2c41e02922b" >
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to getJSONObject" doc:id="aebaafb9-c142-41b7-8b4f-328e0eff01aa" name="getJSONObject"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that fee exists" doc:id="84c9a53d-8d36-4c8b-aa39-fac1b4243f92" expression="#[payload.fee]" is="#[MunitTools::notNullValue()]" message='"ERROR! The medical fee in the payload does not exist!"'/>
+			<munit-tools:assert-that doc:name="Assert that - fee is grater than 100" doc:id="2049699d-41d3-4cee-9a51-efccebe77ae4" expression="#[payload.fee]" is="#[MunitTools::greaterThanOrEqualTo(100)]" message='#["ERROR! The medical fee in the payload is not valid!"]'/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="payloadMediaTypeSuccessTestCase" doc:id="ee496f30-3104-4dc3-88f0-3691a555675a" >
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to getJSONObject" doc:id="74da1088-8ff6-4e86-99c7-2a8c477a4912" name="getJSONObject"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that - payload media type is JSON" doc:id="aa6f99bf-7794-43b8-8155-98bbe2d03a99" expression="#[payload]" is="#[MunitTools::withMediaType('application/json')]" message='#["ERROR! The media type of the response payload is not valid!"]'/>
+		</munit:validation>
+	</munit:test>
+
+
+</mule>

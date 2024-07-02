@@ -1,0 +1,4 @@
+%dw 2.0
+
+type auto_ee28b5c2_96dc_416a_a04c_0179113a9569_Output_Payload = Array<"Mulesoft" | "Maria Fernandes" | "Jorge Fernandes" | "Telma Portela">
+

@@ -1,0 +1,4 @@
+%dw 2.0
+
+type auto_526cde99_2e9e_4fd6_9802_d0b71724011d_Output_Variables_clientUUID = String
+
